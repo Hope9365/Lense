@@ -1,0 +1,8 @@
+Group #LenseBenchState {
+  LayoutMode: Top;
+
+  Label #LenseTierLabel {
+    Style: LabelStyle(FontSize: 16);
+  }
+
+}

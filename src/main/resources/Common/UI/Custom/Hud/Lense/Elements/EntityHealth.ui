@@ -1,0 +1,13 @@
+Group #LenseEntityHealthContainer {
+  LayoutMode: Left;
+
+  Group #LenseHeartImage {
+    Anchor: (Width: 14, Height: 14);
+    Background: "../from_hytale_client/HealthIcon.png";
+  }
+
+  Label #LenseHealthLabel {
+    Style: LabelStyle(FontSize: 14);
+  }
+
+}

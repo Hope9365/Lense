@@ -1,0 +1,27 @@
+Group #LenseProcessingBenchState {
+  LayoutMode: Top;
+
+  Label #LenseTierLabel {
+    Style: LabelStyle(FontSize: 16);
+  }
+
+  Group #LenseProcessingProgress {
+    Visible: false;
+    Anchor: (Height: 20 * 0.75);
+    Padding: (Full: 1);
+    Background: "../../from_hytale_client/ProcessingBar.png";
+
+    ProgressBar #LenseProcessingProgressBar {
+      Anchor: (Height: 15 * 0.75);
+      Direction: End;
+      Alignment: Horizontal;
+      EffectWidth: 37 * 0.75;
+      EffectHeight: 22 * 0.75;
+      EffectOffset: 11 * 0.75;
+      BarTexturePath: "../../from_hytale_client/ProcessingBarFill.png";
+      EffectTexturePath: "../../from_hytale_client/ProcessingBarEffect.png";
+    }
+
+  }
+
+}

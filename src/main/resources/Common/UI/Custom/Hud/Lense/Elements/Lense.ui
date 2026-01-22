@@ -1,0 +1,75 @@
+Group #LenseHud {
+  Visible: false;
+  LayoutMode: Top;
+
+  Group #LenseHudInner {
+    LayoutMode: Center;
+    Anchor: (Top: 52);
+
+    Group #LenseContentWrapper {
+      LayoutMode: Left;
+
+      Group #LenseLeftBackground {
+        Anchor: (Width: 96);
+        Background: "../LeftBackground.png";
+      }
+
+      Group #LenseContent {
+        Background: "../MainBackground.png";
+
+        Group #LenseMainContent {
+          LayoutMode: Left;
+          Anchor: (Full: 8);
+
+          Group #LenseIconContainer {
+            Visible: false;
+            LayoutMode: Top;
+
+            ItemIcon #LenseIcon {
+              Anchor: (Width: 32, Height: 32, Right: 8);
+            }
+          }
+
+          Group #LenseInfo {
+            LayoutMode: Top;
+
+            Label #LenseInfoHeader {
+              Visible: false;
+              Style: LabelStyle(FontSize: 22);
+            }
+
+            Group #LenseInfoBody {
+              LayoutMode: Top;
+              Group #LenseInfoBodyInner {
+                LayoutMode: Top;
+              }
+            }
+
+            Label #LenseInfoFooter {
+              Visible: false;
+              Style: LabelStyle(FontSize: 18);
+            }
+          }
+
+        }
+
+        Group #LenseBlockBreakProgressContainer {
+          Visible: false;
+          Anchor: (Bottom: 0, Height: 2);
+
+          ProgressBar #LenseBlockBreakProgress {
+            BarTexturePath: "../from_hytale_client/ProcessingBarFill.png";
+          }
+        }
+
+      }
+
+      Group #LenseRightBackground {
+        Anchor: (Width: 96);
+        Background: "../RightBackground.png";
+      }
+
+    }
+  }
+
+}

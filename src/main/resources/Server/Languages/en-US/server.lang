@@ -1,0 +1,12 @@
+lense.hud.tier=Tier {tier}
+lense.startup.multiple_hud_warn.warning=(Warning)
+lense.startup.multiple_hud_warn.admin_info=Admin Info:
+lense.startup.multiple_hud_warn.main_text=MultipleHUD is not installed. Without it, Lense will not be compatible with other HUD mods, and various errors will occur. Please install MultipleHUD!!!
+lense.command.lense.desc_available_commands=Available commands:
+lense.command.lense.desc_toggle_hud=- Toggle HUD
+lense.command.lense.desc_toggle_hud_on=- Enable HUD
+lense.command.lense.desc_toggle_hud_off=- Disable HUD
+lense.command.toggle.exec_err_only_by_player=This command can only be executed by a player
+lense.command.toggle.exec_err_invalid_opt=Invalid option.
+lense.command.toggle.exec_err_leave_empty=Use: {on} / {off} or leave empty to toggle
+lense.command.toggle.exec_hud_is_now=HUD is now {value}

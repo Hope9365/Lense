@@ -1,0 +1,23 @@
+{
+    "Group": "hope_zv",
+    "Name": "Lense",
+    "Version": "1.0.0",
+    "Description": "",
+    "Authors": [
+        {
+            "Name": "hope_zv",
+            "Url": "https://www.curseforge.com/members/hope_zv"
+        }
+    ],
+    "Main": "${entry_point}",
+    "ServerVersion": "*",
+    "Dependencies": {
+        "Hytale:EntityModule": "*",
+        "Hytale:AssetModule": "*"
+    },
+    "OptionalDependencies": {
+        
+    },
+    "DisabledByDefault": false,
+    "IncludesAssetPack": true
+}

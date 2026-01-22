@@ -1,0 +1,155 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import org.codehaus.groovy.runtime.GStringImpl
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.3'
+    id 'io.freefair.lombok' version "9.1.0"
+}
+
+group = project.group
+//def buildDate = ZonedDateTime.now(ZoneOffset.UTC)
+//version = buildDate.format(DateTimeFormatter.ofPattern("dd.MM.yy-HH.mm"))
+version = project.version
+
+ext {
+    def userHome = System.getProperty("user.home")
+    def osName = System.getProperty("os.name").toLowerCase()
+
+    if (osName.contains("windows")) {
+        hytaleHome = "${userHome}/AppData/Roaming/Hytale" as GStringImpl
+    } else if (osName.contains("linux")) {
+        def xdgDataHome = System.getenv("XDG_DATA_HOME") ?: "${userHome}/.local/share"
+
+        def paths = [
+                "${userHome}/.var/app/com.hypixel.HytaleLauncher/data/Hytale",
+                "${xdgDataHome}/Hytale",
+                "${userHome}/.local/share/Hytale"
+        ]
+
+        hytaleHome = paths.find { new File(it).exists() } ?: "${xdgDataHome}/Hytale" as GStringImpl
+    } else if (osName.contains("mac")) {
+        hytaleHome = "${userHome}/Library/Application Support/Hytale" as GStringImpl
+    } else {
+        throw new GradleException("Cannot define hytaleHome. Unsupported OS: ${osName}")
+    }
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+//    withSourcesJar()
+//    withJavadocJar()
+}
+
+javadoc {
+    options.addStringOption('Xdoclint:-missing', '-quiet')
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url "https://maven.hytale-modding.info/releases/"
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation(files("$hytaleHome/install/$patchline/package/game/$game_build/Server/HytaleServer.jar"))
+
+    compileOnly "com.buuz135:MultipleHUD:1.0.3"
+    runtimeOnly "com.buuz135:MultipleHUD:1.0.3"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+processResources {
+    var expandProps = [
+            'name'          : project.name,
+            'version'       : project.version,
+            'group'         : project.group,
+            'description'   : description,
+            'server_version': server_version,
+            'entry_point'   : entry_point
+    ]
+
+    filesMatching(['manifest.json']) {
+        expand expandProps
+    }
+    inputs.properties(expandProps)
+}
+
+def serverRunDir = file("$projectDir/run")
+if (!serverRunDir.exists()) {
+    serverRunDir.mkdirs()
+}
+
+tasks.register('updatePluginManifest') {
+    def manifestFile = file('src/main/resources/manifest.json')
+    doLast {
+        if (!manifestFile.exists()) {
+            throw new GradleException("Could not find manifest.json at ${manifestFile.path}!")
+        }
+        def manifestJson = new JsonSlurper().parseText(manifestFile.text)
+        manifestJson.Version = version
+        manifestJson.IncludesAssetPack = includes_pack.toBoolean()
+        manifestFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(manifestJson))
+    }
+}
+
+tasks.named('processResources') {
+    dependsOn 'updatePluginManifest'
+}
+
+tasks.named('build') {
+    doLast {
+        def keep = [] as Set<File>
+        if (tasks.findByName('jar')) {
+            def t = tasks.named('jar').get()
+            if (t.archiveFile.isPresent()) keep << t.archiveFile.get().asFile
+        }
+        if (tasks.findByName('sourcesJar')) {
+            def t = tasks.named('sourcesJar').get()
+            if (t.archiveFile.isPresent()) keep << t.archiveFile.get().asFile
+        }
+        if (tasks.findByName('javadocJar')) {
+            def t = tasks.named('javadocJar').get()
+            if (t.archiveFile.isPresent()) keep << t.archiveFile.get().asFile
+        }
+        if (tasks.findByName('shadowJar')) {
+            def t = tasks.named('shadowJar').get()
+            if (t.hasProperty('archiveFile') && t.archiveFile.isPresent()) keep << t.archiveFile.get().asFile
+        }
+
+        def libsDir = file("$buildDir/libs")
+        if (libsDir.exists()) {
+            libsDir.listFiles()?.each { f ->
+                if (!keep.contains(f)) {
+                    f.delete()
+                }
+            }
+        }
+    }
+}
+
+idea.project.settings.runConfigurations {
+    'HytaleServer'(org.jetbrains.gradle.ext.Application) {
+        mainClass = 'com.hypixel.hytale.Main'
+        moduleName = project.idea.module.name + '.main'
+        programParameters = "--allow-op --assets=$hytaleHome/install/$patchline/package/game/latest/Assets.zip --accept-early-plugins --disable-sentry --auth-mode=authenticated --bind localhost:52752"
+        if (includes_pack.toBoolean()) {
+            programParameters += " --mods=${sourceSets.main.java.srcDirs.first().parentFile.absolutePath}"
+        }
+        if (includes_user_mods.toBoolean()) {
+            programParameters += " --mods=$hytaleHome/UserData/Mods"
+        }
+        workingDirectory = serverRunDir.absolutePath
+    }
+}
