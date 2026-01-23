@@ -2,6 +2,7 @@ Group #LenseItemContainerState {
   LayoutMode: Top;
 
   ItemGrid #LenseContainerItemGrid {
+    Visible: false;
     SlotsPerRow: 9;
     RenderItemQualityBackground: true;
     InfoDisplay: None;

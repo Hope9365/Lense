@@ -15,7 +15,6 @@ import ru.hope_zv.mod.api.DeferredUICommandBuilder;
 import ru.hope_zv.mod.api.content.ContentProvider;
 import ru.hope_zv.mod.impl.context.BlockContext;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,6 +119,8 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
 
                         deferredBuilder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/ItemContainerState.ui");
                         if (!stacks.isEmpty()) {
+                            deferredBuilder.set("#LenseContainerItemGrid.Visible", true);
+                            deferredBuilder.set("#LenseContainerItemGrid.SlotsPerRow", Math.min(stacks.size(), 9));
                             deferredBuilder.set("#LenseContainerItemGrid.ItemStacks", stacks);
                         }
 
