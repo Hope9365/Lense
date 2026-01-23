@@ -1,3 +1,5 @@
+*   ⚠️ This mod works  standalone **without** any mandatory dependencies, <span style="color:#ff9794"><strong>BUT</strong> for compatibility</span> with other HUD mods, <span style="color:#ff9794">you need to install <strong><a style="color:#ff9794" href="https://www.curseforge.com/hytale/mods/multiplehud" target="_blank" rel="nofollow">MultipleHUD</a></strong></span> _(For more information, see the bottom of the description)_
+
 <h1 align="center">Lense</h1>
 
 <p align="center">
@@ -48,4 +50,4 @@ While not strictly mandatory, **[MultipleHUD](https://www.curseforge.com/hytale/
 *   ✅ **With MultipleHUD:** Lense works seamlessly alongside other HUD mods.
 *   ❌ **Without MultipleHUD:** You will likely experience **crashes, errors, or visual glitches** if any other HUD mod is installed.
 
-**Please install MultipleHUD to ensure maximum stability!**
+**Please install [MultipleHUD](https://www.curseforge.com/hytale/mods/multiplehud) to ensure maximum stability!**
