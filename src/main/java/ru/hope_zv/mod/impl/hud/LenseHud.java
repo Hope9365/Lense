@@ -31,6 +31,38 @@ public class LenseHud extends CustomUIHud {
         super(playerRef);
     }
 
+    private static void resetVisibleValues(@Nonnull UICommandBuilder builder) {
+        builder.set("#LenseHud.Visible", false);
+
+        // Header
+        builder.set("#LenseInfoHeader.Visible", false);
+
+        // Block? Icon
+        builder.set("#LenseIconContainer.Visible", false);
+
+        // Block Break Progress
+        builder.set("#LenseBlockBreakProgressContainer.Visible", false);
+
+        // Entity Health
+        builder.set("#LenseEntityHealthContainer.Visible", false);
+
+        // Block Components
+        builder.set("#LenseFarmingComponent.Visible", false);
+        builder.set("#LenseFarmingGrowthLabel.Visible", false);
+
+        // Block States
+        builder.set("#LenseProcessingBenchState.Visible", false);
+        builder.set("#LenseProcessingBenchProgress.Visible", false);
+
+        builder.set("#LenseBenchState.Visible", false);
+
+        builder.set("#LenseItemContainerState.Visible", false);
+        builder.set("#LenseContainerItemGrid.Visible", false);
+
+        // Footer
+        builder.set("#LenseInfoFooter.Visible", false);
+    }
+
     public void updateHud(@Nonnull Player player, @Nonnull PlayerRef playerRef, float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         this.deferredBuilder.reset();
 
@@ -47,26 +79,28 @@ public class LenseHud extends CustomUIHud {
         }
 
         UICommandBuilder builder = new UICommandBuilder();
-        builder.remove("#LenseHud");
-        builder.append("Hud/Lense/Elements/Lense.ui");
+        resetVisibleValues(builder);
         if (hudEnabled && !deferredBuilder.getOperations().isEmpty()) {
             builder.set("#LenseHud.Visible", true);
             deferredBuilder.applyTo(builder);
         }
         this.update(false, builder);
-        
+
     }
 
     @Override
     protected void build(@Nonnull UICommandBuilder builder) {
         builder.append("Hud/Lense/Elements/Lense.ui");
 
-//        if (!deferredBuilder.getOperations().isEmpty()) {
-//            builder.append("Hud/Lense/Elements/Lense.ui");
-//            deferredBuilder.applyTo(builder);
-//        }
-//
-//        this.update(false, builder);
+        builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/EntityHealth.ui");
+
+        // Components
+        builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/Components/Farming.ui");
+
+        // States
+        builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/ProcessingBenchState.ui");
+        builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/BenchState.ui");
+        builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/ItemContainerState.ui");
     }
 
 }

@@ -30,6 +30,7 @@ Bugs may occur, and feedback is highly appreciated!
 *   Containers (Chests) Inventory
 *   Furnace Processing Progress Bar
 *   Bench Tiers
+*   Farming Growth Percent
 
 ### 👤 Entity HUD
 *   Entity Name

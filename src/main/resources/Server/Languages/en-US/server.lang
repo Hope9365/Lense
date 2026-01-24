@@ -1,4 +1,6 @@
 lense.hud.tier=Tier {tier}
+lense.hud.farming_growth_percent=Growth {percent}%
+lense.hud.farming_fully_grown=Fully grown
 lense.startup.multiple_hud_warn.warning=(Warning)
 lense.startup.multiple_hud_warn.admin_info=Admin Info:
 lense.startup.multiple_hud_warn.main_text=MultipleHUD is not installed. Without it, Lense will not be compatible with other HUD mods, and various errors will occur. Please install MultipleHUD!!!

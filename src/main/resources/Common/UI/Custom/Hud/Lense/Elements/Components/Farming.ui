@@ -1,8 +1,8 @@
-Group #LenseBenchState {
+Group #LenseFarmingComponent {
   Visible: false;
   LayoutMode: Top;
 
-  Label #LenseBenchTierLabel {
+  Label #LenseFarmingGrowthLabel {
     Style: LabelStyle(FontSize: 16);
   }
 

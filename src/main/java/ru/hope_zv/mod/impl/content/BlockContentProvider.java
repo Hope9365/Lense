@@ -1,10 +1,13 @@
 package ru.hope_zv.mod.impl.content;
 
+import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
 import com.hypixel.hytale.builtin.crafting.state.BenchState;
 import com.hypixel.hytale.builtin.crafting.state.ProcessingBenchState;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.bench.BenchTierLevel;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.FarmingData;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.FarmingStageData;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTranslationProperties;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -17,6 +20,7 @@ import ru.hope_zv.mod.impl.context.BlockContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BlockContentProvider implements ContentProvider<BlockContext> {
 
@@ -53,6 +57,61 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
                 deferredBuilder.set("#LenseBlockBreakProgress.Value", context.getBreakProgress());
             }
 
+            // Components
+
+            // Farming
+            FarmingData farmingData = blockType.getFarming();
+            if (farmingData != null) {
+
+                int growthPercentDisplay = -1;
+
+                FarmingBlock farmingBlock = context.getFarmingBlock();
+                if (farmingBlock != null) {
+                    Map<String, FarmingStageData[]> dataStages = farmingData.getStages();
+                    if (dataStages != null && !dataStages.isEmpty()) {
+
+                        String stageSet = farmingBlock.getCurrentStageSet();
+                        FarmingStageData[] stages = stageSet != null ? dataStages.get(stageSet) : null;
+
+                        if (stages == null) {
+                            String starting = farmingData.getStartingStageSet();
+                            stages = starting != null ? dataStages.get(starting) : null;
+                        }
+                        if (stages == null) {
+                            stages = dataStages.values().iterator().next();
+                        }
+
+                        int stageCount = (stages != null ? stages.length : 0);
+
+                        if (stageCount <= 1) {
+                            growthPercentDisplay = 100;
+                        } else {
+                            float maxGrowthStages = stageCount - 1;
+                            float growthProgress = farmingBlock.getGrowthProgress();
+                            float clamped = Math.clamp(growthProgress, 0, maxGrowthStages);
+                            float growthPercent = clamped / maxGrowthStages;
+                            growthPercentDisplay = Math.round(growthPercent * 100);
+                        }
+
+                    }
+                } else {
+                    growthPercentDisplay = 100;
+                }
+
+                deferredBuilder.set("#LenseFarmingComponent.Visible", true);
+                if (growthPercentDisplay != -1) {
+                    deferredBuilder.set("#LenseFarmingGrowthLabel.Visible", true);
+                    Message farmingGrowthLabelMessage = growthPercentDisplay >= 100 ?
+                            Message.translation("server.lense.hud.farming_fully_grown").color(DESC_COLOR) :
+                            Message.translation("server.lense.hud.farming_growth_percent").param("percent", growthPercentDisplay).color(DESC_COLOR);
+                    deferredBuilder.set("#LenseFarmingGrowthLabel.TextSpans", farmingGrowthLabelMessage);
+                }
+            }
+            //
+
+            //
+
+            // States
             if (context.getBlockState() != null) {
                 BlockState state = context.getBlockState();
                 switch (state) {
@@ -75,25 +134,23 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
                             }
                         }
 
-                        deferredBuilder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/ProcessingBenchState.ui");
+                        deferredBuilder.set("#LenseProcessingBenchState.Visible", true);
                         if (tier != -1) {
-                            deferredBuilder.set("#LenseTierLabel.TextSpans", Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR));
+                            deferredBuilder.set("#LenseProcessingBenchTierLabel.TextSpans", Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR));
                         }
                         if (progress != -1) {
-                            deferredBuilder.set("#LenseProcessingProgress.Visible", true);
-                            deferredBuilder.set("#LenseProcessingProgressBar.Value", Math.clamp(progress, 0, 1));
+                            deferredBuilder.set("#LenseProcessingBenchProgress.Visible", true);
+                            deferredBuilder.set("#LenseProcessingBenchProgressBar.Value", Math.clamp(progress, 0, 1));
                         }
 
                         break;
                     }
                     case BenchState bench: {
-                        int tier = -1;
+                        int tier = bench.getTierLevel();
 
-                        tier = bench.getTierLevel();
-
-                        deferredBuilder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/BenchState.ui");
+                        deferredBuilder.set("#LenseBenchState.Visible", true);
                         if (tier != -1) {
-                            deferredBuilder.set("#LenseTierLabel.TextSpans", Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR));
+                            deferredBuilder.set("#LenseBenchTierLabel.TextSpans", Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR));
                         }
 
                         break;
@@ -117,7 +174,7 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
                             }
                         }
 
-                        deferredBuilder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/ItemContainerState.ui");
+                        deferredBuilder.set("#LenseItemContainerState.Visible", true);
                         if (!stacks.isEmpty()) {
                             deferredBuilder.set("#LenseContainerItemGrid.Visible", true);
                             deferredBuilder.set("#LenseContainerItemGrid.SlotsPerRow", Math.min(stacks.size(), 9));
@@ -131,6 +188,7 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
                     }
                 }
             }
+            //
 
             String modName = Lense.BLOCK_MOD_NAMES_MAP.get(blockType.getId());
             if (modName != null && !modName.isBlank()) {

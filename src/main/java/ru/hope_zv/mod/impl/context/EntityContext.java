@@ -33,6 +33,8 @@ public class EntityContext extends Context {
     }
 
     public boolean update(@Nonnull Player player, float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
+        this.clear();
+        
         Ref<EntityStore> targetEntity = TargetUtil.getTargetEntity(archetypeChunk.getReferenceTo(index), commandBuffer);
 
         if (targetEntity != null) {

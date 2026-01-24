@@ -50,7 +50,7 @@ public class EntityContentProvider implements ContentProvider<EntityContext> {
             int statIndex = EntityStatType.getAssetMap().getIndex("Health");
             EntityStatValue entityStatValue = stats.get(statIndex);
             if (entityStatValue != null) {
-                deferredBuilder.append("#LenseInfoBody", "Hud/Lense/Elements/EntityHealth.ui");
+                deferredBuilder.set("#LenseEntityHealthContainer.Visible", true);
                 deferredBuilder.set("#LenseHealthLabel.TextSpans", Message.raw(" %s/%s".formatted(formatStatValue(entityStatValue.get()), formatStatValue(entityStatValue.getMax()))));
             }
         }

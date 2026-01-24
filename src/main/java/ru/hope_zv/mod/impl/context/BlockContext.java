@@ -1,5 +1,6 @@
 package ru.hope_zv.mod.impl.context;
 
+import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -13,6 +14,7 @@ import com.hypixel.hytale.server.core.modules.blockhealth.BlockHealthChunk;
 import com.hypixel.hytale.server.core.modules.blockhealth.BlockHealthModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.meta.BlockState;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -27,57 +29,91 @@ import javax.annotation.Nullable;
 public class BlockContext extends Context {
 
     private BlockType blockType;
-    @Nullable
-    private BlockState blockState;
     private Vector3i targetPos;
     private Vector3i offsetPos;
+
     private float breakProgress;
+
+    @Nullable
+    private Ref<ChunkStore> chunkRef;
+    @Nullable
+    private Ref<ChunkStore> blockRef;
+
+    @Nullable
+    private BlockState blockState;
+    @Nullable
+    private FarmingBlock farmingBlock;
 
     public BlockContext() {
         super();
     }
 
     public boolean update(Player player, PlayerRef playerRef, float dt, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer) {
+        this.clear();
+
         Vector3i targetBlockPos = TargetUtil.getTargetBlock(archetypeChunk.getReferenceTo(index), 8, commandBuffer);
+        if (targetBlockPos == null) return false;
 
-        if (targetBlockPos != null) {
-            World world = player.getWorld();
-            if (world != null) {
-                long chunkIndex = ChunkUtil.indexChunkFromBlock(targetBlockPos.x, targetBlockPos.z);
-                WorldChunk chunk = world.getChunkIfInMemory(chunkIndex);
-                if (chunk != null) {
-                    BlockPosition pos = world.getBaseBlock(new BlockPosition(targetBlockPos.x, targetBlockPos.y, targetBlockPos.z));
+        World world = player.getWorld();
+        if (world == null) return false;
 
-                    this.blockType = chunk.getBlockType(pos.x, pos.y, pos.z);
-                    this.blockState = chunk.getState(pos.x, pos.y, pos.z);
-                    this.targetPos = targetBlockPos;
-                    this.offsetPos = new Vector3i(pos.x, pos.y, pos.z);
+        BlockPosition blockPos = world.getBaseBlock(new BlockPosition(targetBlockPos.x, targetBlockPos.y, targetBlockPos.z));
 
-                    this.breakProgress = 0;
-                    ChunkStore chunkStore = world.getChunkStore();
-                    Store<ChunkStore> chunkStoreStore = chunkStore.getStore();
-                    Ref<ChunkStore> chunkReference = chunkStore.getChunkReference(chunkIndex);
+        long chunkIndex = ChunkUtil.indexChunkFromBlock(blockPos.x, blockPos.z);
 
-                    if (chunkReference != null) {
-                        BlockHealthChunk blockHealthComponent = chunkStoreStore.getComponent(chunkReference, BlockHealthModule.get().getBlockHealthChunkComponentType());
-                        if (blockHealthComponent != null) {
-                            float health = blockHealthComponent.getBlockHealth(targetBlockPos);
-                            this.breakProgress = 1 - health;
-                        }
-                    }
+        WorldChunk chunk = world.getChunkIfInMemory(chunkIndex);
+        if (chunk == null) return false;
 
-                    return true;
+        this.blockType = chunk.getBlockType(blockPos.x, blockPos.y, blockPos.z);
+        this.blockState = chunk.getState(blockPos.x, blockPos.y, blockPos.z);
+
+        this.targetPos = targetBlockPos;
+        this.offsetPos = new Vector3i(blockPos.x, blockPos.y, blockPos.z);
+
+        ChunkStore chunkStore = world.getChunkStore();
+        Store<ChunkStore> chunkStoreStore = chunkStore.getStore();
+
+        this.chunkRef = chunkStore.getChunkReference(chunkIndex);
+
+        if (this.chunkRef != null) {
+            BlockHealthChunk blockHealthComponent =
+                    chunkStoreStore.getComponent(this.chunkRef, BlockHealthModule.get().getBlockHealthChunkComponentType());
+            if (blockHealthComponent != null) {
+                float health = blockHealthComponent.getBlockHealth(targetBlockPos);
+                this.breakProgress = 1 - health;
+            }
+
+            BlockComponentChunk blockComponentChunk = chunkStoreStore.getComponent(this.chunkRef, BlockComponentChunk.getComponentType());
+            if (blockComponentChunk != null) {
+                int localX = blockPos.x & 31;
+                int localZ = blockPos.z & 31;
+
+                int blockIndex = ChunkUtil.indexBlockInColumn(localX, blockPos.y, localZ);
+
+                this.blockRef = blockComponentChunk.getEntityReference(blockIndex);
+
+                if (this.blockRef != null) {
+                    this.farmingBlock = chunkStoreStore.getComponent(this.blockRef, FarmingBlock.getComponentType());
                 }
             }
+
         }
 
-        return false;
+        return true;
     }
 
     public void clear() {
         this.blockType = null;
-        this.blockState = null;
         this.targetPos = null;
         this.offsetPos = null;
+
+        this.breakProgress = 0;
+
+        this.chunkRef = null;
+        this.blockRef = null;
+
+        this.blockState = null;
+        this.farmingBlock = null;
     }
+
 }

@@ -1,17 +1,18 @@
 Group #LenseProcessingBenchState {
+  Visible: false;
   LayoutMode: Top;
 
-  Label #LenseTierLabel {
+  Label #LenseProcessingBenchTierLabel {
     Style: LabelStyle(FontSize: 16);
   }
 
-  Group #LenseProcessingProgress {
+  Group #LenseProcessingBenchProgress {
     Visible: false;
     Anchor: (Height: 20 * 0.75);
     Padding: (Full: 1);
     Background: "../../from_hytale_client/ProcessingBar.png";
 
-    ProgressBar #LenseProcessingProgressBar {
+    ProgressBar #LenseProcessingBenchProgressBar {
       Anchor: (Height: 15 * 0.75);
       Direction: End;
       Alignment: Horizontal;
