@@ -1,41 +1,53 @@
+@SlotSize = 74 * 0.45;
+@SlotIconSize = 64 * 0.45;
+@SlotSpacing = 2 * 0.45;
+@TileWidth = 76 * 0.45;
+@TileHeightBase = 92 * 0.45;
+@RowSpacing = 18 * 0.45;
+@TileHeight = @TileHeightBase + @RowSpacing;
+@TileOffset = 1 * 0.45;
+@LabelSpacing = 2 * 0.45;
+@LabelHeight = 16 * 0.45;
+@ItemsPerRow = 9;
+@ItemsGridWidth = @TileWidth * @ItemsPerRow;
+
+@LenseItemSlotStyle = ItemGridStyle(
+  SlotSpacing: 0,
+  SlotSize: @SlotSize,
+  SlotIconSize: @SlotIconSize,
+  SlotBackground: "../../from_hytale_client/Inventory/Slot.png",
+  QuantityPopupSlotOverlay: "../../from_hytale_client/Inventory/QuantityPopupSlotOverlay.png",
+  BrokenSlotBackgroundOverlay: "../../from_hytale_client/Inventory/SlotItemBrokenCracksOverlay.png",
+  BrokenSlotIconOverlay: "../../from_hytale_client/Inventory/SlotItemBrokenIconOverlay.png",
+  DefaultItemIcon: "../../from_hytale_client/Inventory/UnknownItemIcon.png",
+  DurabilityBar: "../../from_hytale_client/Inventory/DurabilityBar.png",
+  DurabilityBarBackground: "../../from_hytale_client/Inventory/DurabilityBarBackground.png",
+  DurabilityBarAnchor: (
+    Bottom: 10 * 0.45,
+    Left: 13 * 0.45,
+    Width: 48 * 0.45,
+    Height: 2 * 0.45,
+  ),
+  DurabilityBarColorStart: #a63232,
+  DurabilityBarColorEnd: #63b649,
+  CursedIconPatch: "../../from_hytale_client/Inventory/CursedSpiral.png",
+  CursedIconAnchor: (
+    Bottom: 67 * 0.45,
+    Left: 46 * 0.45,
+    Width: 21 * 0.45,
+    Height: 21 * 0.45,
+  ),
+);
+
 Group #LenseItemContainerState {
   Visible: false;
-  LayoutMode: Top;
+  LayoutMode: Left;
+  Anchor: (Left: 0);
 
-  ItemGrid #LenseContainerItemGrid {
+  Group #LenseContainerItems {
     Visible: false;
-    SlotsPerRow: 9;
-    RenderItemQualityBackground: true;
-    InfoDisplay: None;
-    ShowScrollbar: false;
-    AreItemsDraggable: false;
-    Style: (
-      SlotSpacing: 2 * 0.45,
-      SlotSize: 74 * 0.45,
-      SlotIconSize: 64 * 0.45,
-      SlotBackground: "../../from_hytale_client/Inventory/Slot.png",
-      QuantityPopupSlotOverlay: "../../from_hytale_client/Inventory/QuantityPopupSlotOverlay.png",
-      BrokenSlotBackgroundOverlay: "../../from_hytale_client/Inventory/SlotItemBrokenCracksOverlay.png",
-      BrokenSlotIconOverlay: "../../from_hytale_client/Inventory/SlotItemBrokenIconOverlay.png",
-      DefaultItemIcon: "../../from_hytale_client/Inventory/UnknownItemIcon.png",
-      DurabilityBar: "../../from_hytale_client/Inventory/DurabilityBar.png",
-      DurabilityBarBackground: "../../from_hytale_client/Inventory/DurabilityBarBackground.png",
-      DurabilityBarAnchor: (
-        Bottom: 10 * 0.45,
-        Left: 13 * 0.45,
-        Width: 48 * 0.45,
-        Height: 2 * 0.45,
-      ),
-      DurabilityBarColorStart: #a63232,
-      DurabilityBarColorEnd: #63b649,
-      CursedIconPatch: "../../from_hytale_client/Inventory/CursedSpiral.png",
-      CursedIconAnchor: (
-        Bottom: 67 * 0.45,
-        Left: 46 * 0.45,
-        Width: 21 * 0.45,
-        Height: 21 * 0.45,
-      ),
-    );
+    LayoutMode: LeftCenterWrap;
+    Anchor: (Width: @ItemsGridWidth);
   }
 
 }
