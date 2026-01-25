@@ -11,6 +11,8 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.Farmin
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTranslationProperties;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.ui.Anchor;
+import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.universe.world.meta.BlockState;
 import com.hypixel.hytale.server.core.universe.world.meta.state.ItemContainerState;
 import ru.hope_zv.mod.Lense;
@@ -18,15 +20,25 @@ import ru.hope_zv.mod.api.DeferredUICommandBuilder;
 import ru.hope_zv.mod.api.content.ContentProvider;
 import ru.hope_zv.mod.impl.context.BlockContext;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
 
+@SuppressWarnings("removal")
 public class BlockContentProvider implements ContentProvider<BlockContext> {
 
-    // Limit matches the statically defined UI slots (10 per row, 6 rows) to avoid missing element IDs.
-    private static final int MAX_CONTAINER_ITEMS = 60;
+    private static final ThreadLocal<NumberFormat> QUANTITY_FORMAT = ThreadLocal.withInitial(() -> {
+        NumberFormat f = NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.SHORT);
+        f.setMaximumFractionDigits(1);
+        f.setMinimumFractionDigits(0);
+        f.setRoundingMode(RoundingMode.DOWN);
+        return f;
+    });
+    private int allocatedContainerSlots = 0;
+    private int lastRenderedContainerSlots = 0;
 
     private static Message getDisplayName(BlockType type) {
         Item item = type.getItem();
@@ -43,34 +55,54 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
         return Message.raw(type.getId());
     }
 
-    private static String formatCompactQuantity(int quantity) {
-        if (quantity < 1000) {
-            return Integer.toString(quantity);
-        }
-
-        if (quantity < 1_000_000) {
-            return formatWithUnit(quantity, 1_000, "k");
-        }
-
-        if (quantity < 1_000_000_000) {
-            return formatWithUnit(quantity, 1_000_000, "M");
-        }
-
-        return formatWithUnit(quantity, 1_000_000_000, "B");
+    public static String formatCompactQuantity(long number) {
+        return QUANTITY_FORMAT.get().format(number);
     }
 
-    private static String formatWithUnit(int quantity, int unit, String suffix) {
-        double value = (double) quantity / unit;
-        if (value < 10) {
-            double rounded = Math.round(value * 10.0) / 10.0;
-            if (rounded == Math.rint(rounded)) {
-                return (long) rounded + suffix;
-            }
-            return String.format(Locale.US, "%.1f%s", rounded, suffix);
-        }
-        return Math.round(value) + suffix;
+    private static String buildSlotMarkup(int n) {
+        return (
+                "Group #LenseContainerItem" + n + " {"
+                        + " Visible: false;"
+                        + " LayoutMode: Top;"
+                        + " Anchor: (Width: 76 * 0.45, Height: 110 * 0.45);"
+                        + " ItemGrid #LenseContainerItem" + n + "Grid {"
+                        + "   Anchor: (Width: 74 * 0.45, Height: 74 * 0.45, Left: 1 * 0.45);"
+                        + "   SlotsPerRow: 1;"
+                        + "   RenderItemQualityBackground: true;"
+                        + "   InfoDisplay: None;"
+                        + "   ShowScrollbar: false;"
+                        + "   AreItemsDraggable: false;"
+                        + " }"
+                        + " Group { Anchor: (Height: 0.9); }"
+                        + " Label #LenseContainerItem" + n + "Quantity {"
+                        + "   Anchor: (Height: 16 * 0.45, Left: 0, Right: 0);"
+                        + "   Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);"
+                        + " }"
+                        + "}"
+        );
     }
 
+    public void resetUiState() {
+        allocatedContainerSlots = 0;
+        lastRenderedContainerSlots = 0;
+    }
+
+    private void ensureContainerSlots(DeferredUICommandBuilder deferredBuilder, int neededSlots) {
+        if (neededSlots <= allocatedContainerSlots) return;
+
+        for (int i = allocatedContainerSlots + 1; i <= neededSlots; i++) {
+            deferredBuilder.appendInline("#LenseContainerItems", buildSlotMarkup(i));
+
+            deferredBuilder.set(
+                    "#LenseContainerItem" + i + "Grid.Style",
+                    Value.ref("Hud/Lense/Elements/States/ItemContainerState.ui", "LenseItemSlotStyle")
+            );
+        }
+
+        allocatedContainerSlots = neededSlots;
+    }
+
+    @Override
     public void updateContent(BlockContext context, DeferredUICommandBuilder deferredBuilder) {
         BlockType blockType = context.getBlockType();
         if (!blockType.getId().equals("Empty")) {
@@ -94,7 +126,6 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
             // Farming
             FarmingData farmingData = blockType.getFarming();
             if (farmingData != null) {
-
                 int growthPercentDisplay = -1;
 
                 FarmingBlock farmingBlock = context.getFarmingBlock();
@@ -124,7 +155,6 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
                             float growthPercent = clamped / maxGrowthStages;
                             growthPercentDisplay = Math.round(growthPercent * 100);
                         }
-
                     }
                 } else {
                     growthPercentDisplay = 100;
@@ -133,9 +163,12 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
                 deferredBuilder.set("#LenseFarmingComponent.Visible", true);
                 if (growthPercentDisplay != -1) {
                     deferredBuilder.set("#LenseFarmingGrowthLabel.Visible", true);
-                    Message farmingGrowthLabelMessage = growthPercentDisplay >= 100 ?
-                            Message.translation("server.lense.hud.farming_fully_grown").color(DESC_COLOR) :
-                            Message.translation("server.lense.hud.farming_growth_percent").param("percent", growthPercentDisplay).color(DESC_COLOR);
+                    Message farmingGrowthLabelMessage = growthPercentDisplay >= 100
+                            ? Message.translation("server.lense.hud.farming_fully_grown").color(DESC_COLOR)
+                            : Message.translation("server.lense.hud.farming_growth_percent")
+                            .param("percent", growthPercentDisplay)
+                            .color(DESC_COLOR);
+
                     deferredBuilder.set("#LenseFarmingGrowthLabel.TextSpans", farmingGrowthLabelMessage);
                 }
             }
@@ -168,25 +201,31 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
 
                         deferredBuilder.set("#LenseProcessingBenchState.Visible", true);
                         if (tier != -1) {
-                            deferredBuilder.set("#LenseProcessingBenchTierLabel.TextSpans", Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR));
+                            deferredBuilder.set(
+                                    "#LenseProcessingBenchTierLabel.TextSpans",
+                                    Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR)
+                            );
                         }
                         if (progress != -1) {
                             deferredBuilder.set("#LenseProcessingBenchProgress.Visible", true);
                             deferredBuilder.set("#LenseProcessingBenchProgressBar.Value", Math.clamp(progress, 0, 1));
                         }
-
                         break;
                     }
+
                     case BenchState bench: {
                         int tier = bench.getTierLevel();
 
                         deferredBuilder.set("#LenseBenchState.Visible", true);
                         if (tier != -1) {
-                            deferredBuilder.set("#LenseBenchTierLabel.TextSpans", Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR));
+                            deferredBuilder.set(
+                                    "#LenseBenchTierLabel.TextSpans",
+                                    Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR)
+                            );
                         }
-
                         break;
                     }
+
                     case ItemContainerState container: {
                         List<ItemStack> stacks = new ArrayList<>();
 
@@ -201,32 +240,55 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
                                         continue r;
                                     }
                                 }
-
                                 stacks.add(stack);
                             }
                         }
 
+                        if (stacks.isEmpty()) {
+                            break;
+                        }
+
                         deferredBuilder.set("#LenseItemContainerState.Visible", true);
-                        if (!stacks.isEmpty()) {
-                            deferredBuilder.set("#LenseContainerItems.Visible", true);
-                        }
+                        deferredBuilder.set("#LenseContainerItems.Visible", true);
 
-                        for (int i = 1; i <= MAX_CONTAINER_ITEMS; i++) {
-                            deferredBuilder.set("#LenseContainerItem" + i + ".Visible", false);
-                        }
+                        int renderCount = stacks.size();
 
-                        int renderCount = Math.min(stacks.size(), MAX_CONTAINER_ITEMS);
+                        int perRow = Math.min(renderCount, 9);
+                        int width = Math.round((76 * 0.45f) * perRow);
+
+                        Anchor anchor = new Anchor();
+                        anchor.setWidth(Value.of(width));
+
+                        deferredBuilder.setObject("#LenseContainerItems.Anchor", anchor);
+
+                        ensureContainerSlots(deferredBuilder, renderCount);
+
                         for (int i = 0; i < renderCount; i++) {
                             int slot = i + 1;
                             ItemStack stack = stacks.get(i);
                             ItemStack iconStack = stack.withQuantity(1);
+                            if (iconStack == null) {
+                                iconStack = stack;
+                            }
+
                             deferredBuilder.set("#LenseContainerItem" + slot + ".Visible", true);
                             deferredBuilder.set("#LenseContainerItem" + slot + "Grid.ItemStacks", List.of(iconStack));
-                            deferredBuilder.set("#LenseContainerItem" + slot + "Quantity.TextSpans", Message.raw(formatCompactQuantity(stack.getQuantity())));
+                            deferredBuilder.set(
+                                    "#LenseContainerItem" + slot + "Quantity.TextSpans",
+                                    Message.raw(formatCompactQuantity(stack.getQuantity()))
+                            );
                         }
 
+                        if (lastRenderedContainerSlots > renderCount) {
+                            for (int slot = renderCount + 1; slot <= lastRenderedContainerSlots; slot++) {
+                                deferredBuilder.set("#LenseContainerItem" + slot + ".Visible", false);
+                            }
+                        }
+
+                        lastRenderedContainerSlots = renderCount;
                         break;
                     }
+
                     default: {
                         break;
                     }
@@ -239,8 +301,6 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
                 deferredBuilder.set("#LenseInfoFooter.Visible", true);
                 deferredBuilder.set("#LenseInfoFooter.TextSpans", Message.raw(modName).color(MOD_NAME_COLOR).bold(true));
             }
-
         }
     }
-
 }
