@@ -57,7 +57,7 @@ public class LenseHud extends CustomUIHud {
         builder.set("#LenseBenchState.Visible", false);
 
         builder.set("#LenseItemContainerState.Visible", false);
-        builder.set("#LenseContainerItemGrid.Visible", false);
+        builder.set("#LenseContainerItems.Visible", false);
 
         // Footer
         builder.set("#LenseInfoFooter.Visible", false);

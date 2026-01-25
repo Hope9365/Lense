@@ -1,41 +1,1552 @@
+@SlotSize = 74 * 0.45;
+@SlotIconSize = 64 * 0.45;
+@SlotSpacing = 2 * 0.45;
+@TileWidth = 76 * 0.45;
+@TileHeightBase = 92 * 0.45;
+@RowSpacing = 18 * 0.45;
+@TileHeight = @TileHeightBase + @RowSpacing;
+@TileOffset = 1 * 0.45;
+@LabelSpacing = 2 * 0.45;
+@LabelHeight = 16 * 0.45;
+@ItemsPerRow = 10;
+@ItemsGridWidth = @TileWidth * @ItemsPerRow;
+
+@LenseItemSlotStyle = ItemGridStyle(
+  SlotSpacing: 0,
+  SlotSize: @SlotSize,
+  SlotIconSize: @SlotIconSize,
+  SlotBackground: "../../from_hytale_client/Inventory/Slot.png",
+  QuantityPopupSlotOverlay: "../../from_hytale_client/Inventory/QuantityPopupSlotOverlay.png",
+  BrokenSlotBackgroundOverlay: "../../from_hytale_client/Inventory/SlotItemBrokenCracksOverlay.png",
+  BrokenSlotIconOverlay: "../../from_hytale_client/Inventory/SlotItemBrokenIconOverlay.png",
+  DefaultItemIcon: "../../from_hytale_client/Inventory/UnknownItemIcon.png",
+  DurabilityBar: "../../from_hytale_client/Inventory/DurabilityBar.png",
+  DurabilityBarBackground: "../../from_hytale_client/Inventory/DurabilityBarBackground.png",
+  DurabilityBarAnchor: (
+    Bottom: 10 * 0.45,
+    Left: 13 * 0.45,
+    Width: 48 * 0.45,
+    Height: 2 * 0.45,
+  ),
+  DurabilityBarColorStart: #a63232,
+  DurabilityBarColorEnd: #63b649,
+  CursedIconPatch: "../../from_hytale_client/Inventory/CursedSpiral.png",
+  CursedIconAnchor: (
+    Bottom: 67 * 0.45,
+    Left: 46 * 0.45,
+    Width: 21 * 0.45,
+    Height: 21 * 0.45,
+  ),
+);
+
 Group #LenseItemContainerState {
   Visible: false;
   LayoutMode: Top;
 
-  ItemGrid #LenseContainerItemGrid {
+  Group #LenseContainerItems {
     Visible: false;
-    SlotsPerRow: 9;
-    RenderItemQualityBackground: true;
-    InfoDisplay: None;
-    ShowScrollbar: false;
-    AreItemsDraggable: false;
-    Style: (
-      SlotSpacing: 2 * 0.45,
-      SlotSize: 74 * 0.45,
-      SlotIconSize: 64 * 0.45,
-      SlotBackground: "../../from_hytale_client/Inventory/Slot.png",
-      QuantityPopupSlotOverlay: "../../from_hytale_client/Inventory/QuantityPopupSlotOverlay.png",
-      BrokenSlotBackgroundOverlay: "../../from_hytale_client/Inventory/SlotItemBrokenCracksOverlay.png",
-      BrokenSlotIconOverlay: "../../from_hytale_client/Inventory/SlotItemBrokenIconOverlay.png",
-      DefaultItemIcon: "../../from_hytale_client/Inventory/UnknownItemIcon.png",
-      DurabilityBar: "../../from_hytale_client/Inventory/DurabilityBar.png",
-      DurabilityBarBackground: "../../from_hytale_client/Inventory/DurabilityBarBackground.png",
-      DurabilityBarAnchor: (
-        Bottom: 10 * 0.45,
-        Left: 13 * 0.45,
-        Width: 48 * 0.45,
-        Height: 2 * 0.45,
-      ),
-      DurabilityBarColorStart: #a63232,
-      DurabilityBarColorEnd: #63b649,
-      CursedIconPatch: "../../from_hytale_client/Inventory/CursedSpiral.png",
-      CursedIconAnchor: (
-        Bottom: 67 * 0.45,
-        Left: 46 * 0.45,
-        Width: 21 * 0.45,
-        Height: 21 * 0.45,
-      ),
-    );
+    LayoutMode: LeftCenterWrap;
+    Anchor: (Width: @ItemsGridWidth);
+    Group #LenseContainerItem1 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem1Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem1Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem2 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem2Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem2Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem3 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem3Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem3Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem4 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem4Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem4Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem5 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem5Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem5Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem6 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem6Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem6Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem7 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem7Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem7Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem8 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem8Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem8Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem9 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem9Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem9Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem10 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem10Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem10Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem11 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem11Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem11Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem12 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem12Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem12Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem13 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem13Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem13Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem14 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem14Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem14Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem15 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem15Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem15Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem16 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem16Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem16Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem17 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem17Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem17Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem18 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem18Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem18Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem19 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem19Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem19Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem20 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem20Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem20Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem21 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem21Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem21Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem22 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem22Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem22Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem23 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem23Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem23Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem24 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem24Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem24Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem25 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem25Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem25Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem26 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem26Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem26Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem27 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem27Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem27Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem28 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem28Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem28Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem29 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem29Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem29Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem30 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem30Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem30Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem31 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem31Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem31Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem32 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem32Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem32Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem33 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem33Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem33Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem34 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem34Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem34Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem35 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem35Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem35Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem36 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem36Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem36Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem37 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem37Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem37Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem38 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem38Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem38Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem39 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem39Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem39Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem40 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem40Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem40Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem41 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem41Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem41Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem42 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem42Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem42Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem43 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem43Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem43Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem44 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem44Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem44Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem45 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem45Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem45Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem46 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem46Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem46Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem47 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem47Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem47Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem48 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem48Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem48Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem49 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem49Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem49Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem50 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem50Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem50Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem51 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem51Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem51Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem52 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem52Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem52Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem53 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem53Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem53Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem54 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem54Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem54Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem55 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem55Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem55Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem56 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem56Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem56Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem57 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem57Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem57Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem58 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem58Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem58Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem59 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem59Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem59Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
+    Group #LenseContainerItem60 {
+      Visible: false;
+      LayoutMode: Top;
+      Anchor: (Width: @TileWidth, Height: @TileHeight);
+
+      ItemGrid #LenseContainerItem60Grid {
+        Anchor: (Width: @SlotSize, Height: @SlotSize, Left: @TileOffset);
+        SlotsPerRow: 1;
+        RenderItemQualityBackground: true;
+        InfoDisplay: None;
+        ShowScrollbar: false;
+        AreItemsDraggable: false;
+        Style: @LenseItemSlotStyle;
+      }
+
+      Group {
+        Anchor: (Height: @LabelSpacing);
+      }
+
+      Label #LenseContainerItem60Quantity {
+        Anchor: (Height: @LabelHeight, Left: 0, Right: 0);
+        Style: LabelStyle(FontSize: 14, TextColor: #FFFFFF, HorizontalAlignment: Center);
+      }
+    }
+
   }
 
 }

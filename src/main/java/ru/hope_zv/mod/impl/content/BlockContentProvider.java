@@ -21,8 +21,12 @@ import ru.hope_zv.mod.impl.context.BlockContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 public class BlockContentProvider implements ContentProvider<BlockContext> {
+
+    // Limit matches the statically defined UI slots (10 per row, 6 rows) to avoid missing element IDs.
+    private static final int MAX_CONTAINER_ITEMS = 60;
 
     private static Message getDisplayName(BlockType type) {
         Item item = type.getItem();
@@ -37,6 +41,34 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
         }
 
         return Message.raw(type.getId());
+    }
+
+    private static String formatCompactQuantity(int quantity) {
+        if (quantity < 1000) {
+            return Integer.toString(quantity);
+        }
+
+        if (quantity < 1_000_000) {
+            return formatWithUnit(quantity, 1_000, "k");
+        }
+
+        if (quantity < 1_000_000_000) {
+            return formatWithUnit(quantity, 1_000_000, "M");
+        }
+
+        return formatWithUnit(quantity, 1_000_000_000, "B");
+    }
+
+    private static String formatWithUnit(int quantity, int unit, String suffix) {
+        double value = (double) quantity / unit;
+        if (value < 10) {
+            double rounded = Math.round(value * 10.0) / 10.0;
+            if (rounded == Math.rint(rounded)) {
+                return (long) rounded + suffix;
+            }
+            return String.format(Locale.US, "%.1f%s", rounded, suffix);
+        }
+        return Math.round(value) + suffix;
     }
 
     public void updateContent(BlockContext context, DeferredUICommandBuilder deferredBuilder) {
@@ -176,9 +208,21 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
 
                         deferredBuilder.set("#LenseItemContainerState.Visible", true);
                         if (!stacks.isEmpty()) {
-                            deferredBuilder.set("#LenseContainerItemGrid.Visible", true);
-                            deferredBuilder.set("#LenseContainerItemGrid.SlotsPerRow", Math.min(stacks.size(), 9));
-                            deferredBuilder.set("#LenseContainerItemGrid.ItemStacks", stacks);
+                            deferredBuilder.set("#LenseContainerItems.Visible", true);
+                        }
+
+                        for (int i = 1; i <= MAX_CONTAINER_ITEMS; i++) {
+                            deferredBuilder.set("#LenseContainerItem" + i + ".Visible", false);
+                        }
+
+                        int renderCount = Math.min(stacks.size(), MAX_CONTAINER_ITEMS);
+                        for (int i = 0; i < renderCount; i++) {
+                            int slot = i + 1;
+                            ItemStack stack = stacks.get(i);
+                            ItemStack iconStack = stack.withQuantity(1);
+                            deferredBuilder.set("#LenseContainerItem" + slot + ".Visible", true);
+                            deferredBuilder.set("#LenseContainerItem" + slot + "Grid.ItemStacks", List.of(iconStack));
+                            deferredBuilder.set("#LenseContainerItem" + slot + "Quantity.TextSpans", Message.raw(formatCompactQuantity(stack.getQuantity())));
                         }
 
                         break;
