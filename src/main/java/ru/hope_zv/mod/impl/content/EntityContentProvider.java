@@ -18,20 +18,19 @@ import java.text.DecimalFormatSymbols;
 
 public class EntityContentProvider implements ContentProvider<EntityContext> {
 
-    private static final DecimalFormat STAT_FORMAT;
-
-    static {
+    private static final ThreadLocal<DecimalFormat> STAT_FORMAT = ThreadLocal.withInitial(() -> {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setGroupingSeparator(' ');
         symbols.setDecimalSeparator('.');
-        STAT_FORMAT = new DecimalFormat("#,###.#", symbols);
-    }
+        return new DecimalFormat("#,###.#", symbols);
+    });
+
 
     private static String formatStatValue(float value) {
         if (!Float.isFinite(value)) {
             return String.valueOf(value);
         }
-        return STAT_FORMAT.format(value);
+        return STAT_FORMAT.get().format(value);
     }
 
     public void updateContent(EntityContext context, DeferredUICommandBuilder deferredBuilder) {
