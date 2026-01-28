@@ -1,6 +1,7 @@
 package ru.hope_zv.mod.impl.context;
 
 import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
+import com.hypixel.hytale.builtin.adventure.teleporter.component.Teleporter;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -42,7 +43,9 @@ public class BlockContext extends Context {
     @Nullable
     private BlockState blockState;
     @Nullable
-    private FarmingBlock farmingBlock;
+    private FarmingBlock compFarmingBlock;
+    @Nullable
+    private Teleporter compTeleporter;
 
     public BlockContext() {
         super();
@@ -93,7 +96,8 @@ public class BlockContext extends Context {
                 this.blockRef = blockComponentChunk.getEntityReference(blockIndex);
 
                 if (this.blockRef != null) {
-                    this.farmingBlock = chunkStoreStore.getComponent(this.blockRef, FarmingBlock.getComponentType());
+                    this.compFarmingBlock = chunkStoreStore.getComponent(this.blockRef, FarmingBlock.getComponentType());
+                    this.compTeleporter = chunkStoreStore.getComponent(this.blockRef, Teleporter.getComponentType());
                 }
             }
 
@@ -113,7 +117,8 @@ public class BlockContext extends Context {
         this.blockRef = null;
 
         this.blockState = null;
-        this.farmingBlock = null;
+        this.compFarmingBlock = null;
+        this.compTeleporter = null;
     }
 
 }

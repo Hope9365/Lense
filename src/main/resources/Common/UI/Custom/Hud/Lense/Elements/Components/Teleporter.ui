@@ -1,0 +1,15 @@
+Group #LenseTeleporterComponent {
+  Visible: false;
+  LayoutMode: Top;
+
+  Label #LenseTeleporterSelfWarp {
+    Visible: false;
+    Style: LabelStyle(FontSize: 16);
+  }
+  
+  Label #LenseTeleporterTargetWarp {
+    Visible: false;
+    Style: LabelStyle(FontSize: 16);
+  }
+
+}

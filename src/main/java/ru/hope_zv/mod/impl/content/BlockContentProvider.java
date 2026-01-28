@@ -1,6 +1,7 @@
 package ru.hope_zv.mod.impl.content;
 
 import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
+import com.hypixel.hytale.builtin.adventure.teleporter.component.Teleporter;
 import com.hypixel.hytale.builtin.crafting.state.BenchState;
 import com.hypixel.hytale.builtin.crafting.state.ProcessingBenchState;
 import com.hypixel.hytale.server.core.Message;
@@ -123,12 +124,45 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
 
             // Components
 
+            // Teleporter
+            Teleporter teleporter = context.getCompTeleporter();
+            if (teleporter != null) {
+                String selfWarpNameDisplay = null;
+                String targetWarpNameDisplay = null;
+
+                String selfWarpName = teleporter.getOwnedWarp();
+                if (selfWarpName != null && !selfWarpName.isEmpty()) {
+                    selfWarpNameDisplay = selfWarpName;
+                }
+
+                String targetWarpName = teleporter.getWarp();
+                if (targetWarpName != null && !targetWarpName.isEmpty()) {
+                    targetWarpNameDisplay = targetWarpName;
+                }
+
+                if (selfWarpNameDisplay != null || targetWarpNameDisplay != null) {
+                    deferredBuilder.set("#LenseTeleporterComponent.Visible", true);
+
+                    if (selfWarpNameDisplay != null) {
+                        deferredBuilder.set("#LenseTeleporterSelfWarp.Visible", true);
+                        deferredBuilder.set("#LenseTeleporterSelfWarp.TextSpans", Message.translation("server.lense.hud.teleporter_self_warp").param("warp", selfWarpNameDisplay).color(DESC_COLOR));
+                    }
+
+                    if (targetWarpNameDisplay != null) {
+                        deferredBuilder.set("#LenseTeleporterTargetWarp.Visible", true);
+                        deferredBuilder.set("#LenseTeleporterTargetWarp.TextSpans", Message.translation("server.lense.hud.teleporter_target_warp").param("warp", targetWarpNameDisplay).color(DESC_COLOR));
+                    }
+
+                }
+            }
+            //
+
             // Farming
             FarmingData farmingData = blockType.getFarming();
             if (farmingData != null) {
                 int growthPercentDisplay = -1;
 
-                FarmingBlock farmingBlock = context.getFarmingBlock();
+                FarmingBlock farmingBlock = context.getCompFarmingBlock();
                 if (farmingBlock != null) {
                     Map<String, FarmingStageData[]> dataStages = farmingData.getStages();
                     if (dataStages != null && !dataStages.isEmpty()) {
@@ -160,8 +194,8 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
                     growthPercentDisplay = 100;
                 }
 
-                deferredBuilder.set("#LenseFarmingComponent.Visible", true);
                 if (growthPercentDisplay != -1) {
+                    deferredBuilder.set("#LenseFarmingComponent.Visible", true);
                     deferredBuilder.set("#LenseFarmingGrowthLabel.Visible", true);
                     Message farmingGrowthLabelMessage = growthPercentDisplay >= 100
                             ? Message.translation("server.lense.hud.farming_fully_grown").color(DESC_COLOR)

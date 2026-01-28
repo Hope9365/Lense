@@ -3,6 +3,7 @@ Group #LenseFarmingComponent {
   LayoutMode: Top;
 
   Label #LenseFarmingGrowthLabel {
+    Visible: false;
     Style: LabelStyle(FontSize: 16);
   }
 

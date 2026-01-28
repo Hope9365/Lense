@@ -49,6 +49,10 @@ public class LenseHud extends CustomUIHud {
         // Block Components
         builder.set("#LenseFarmingComponent.Visible", false);
         builder.set("#LenseFarmingGrowthLabel.Visible", false);
+        
+        builder.set("#LenseTeleporterComponent.Visible", false);
+        builder.set("#LenseTeleporterSelfWarp.Visible", false);
+        builder.set("#LenseTeleporterTargetWarp.Visible", false);
 
         // Block States
         builder.set("#LenseProcessingBenchState.Visible", false);
@@ -107,6 +111,7 @@ public class LenseHud extends CustomUIHud {
 
         // Components
         builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/Components/Farming.ui");
+        builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/Components/Teleporter.ui");
 
         // States
         builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/ProcessingBenchState.ui");
