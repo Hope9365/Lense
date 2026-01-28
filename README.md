@@ -31,6 +31,7 @@ Bugs may occur, and feedback is highly appreciated!
 *   Furnace Processing Progress Bar
 *   Bench Tiers
 *   Farming Growth Percent
+*   Teleporter Warps Info
 
 ### 👤 Entity HUD
 *   Entity Name
