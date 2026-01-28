@@ -19,7 +19,9 @@ public class LenseCommand extends CommandBase implements CommandProvider {
         this.configService = configService;
         this.addAliases("l");
         this.setAllowsExtraArguments(true);
+
         this.addSubCommand(new ToggleCommand(this));
+//        this.addSubCommand(new ScaleCommand(this));
     }
 
     public static Message prefixed(@Nonnull Message body) {
@@ -30,16 +32,22 @@ public class LenseCommand extends CommandBase implements CommandProvider {
 
     private static void showHelp(@Nonnull CommandContext ctx) {
         Message msg = Message.empty()
-                .insert(Message.translation("server.lense.command.lense.desc_available_commands").bold(true))
+                .insert(Message.translation("lense.command.lense.desc_available_commands").bold(true))
                 .insert("\n")
                 .insert(Message.raw("/lense toggle ").color(COLOR_ACCENT))
-                .insert(Message.translation("server.lense.command.lense.desc_toggle_hud"))
+                .insert(Message.translation("lense.command.lense.desc_toggle_hud"))
                 .insert("\n")
                 .insert(Message.raw("/lense toggle on ").color(COLOR_ACCENT))
-                .insert(Message.translation("server.lense.command.lense.desc_toggle_hud_on"))
+                .insert(Message.translation("lense.command.lense.desc_toggle_hud_on"))
                 .insert("\n")
                 .insert(Message.raw("/lense toggle off ").color(COLOR_ACCENT))
-                .insert(Message.translation("server.lense.command.lense.desc_toggle_hud_off"));
+                .insert(Message.translation("lense.command.lense.desc_toggle_hud_off"))
+                .insert("\n")
+                .insert(Message.raw("/lense scale ").color(COLOR_ACCENT))
+                .insert(Message.translation("lense.command.lense.desc_scale_hud"))
+                .insert("\n")
+                .insert(Message.raw("/lense scale <value> ").color(COLOR_ACCENT))
+                .insert(Message.translation("lense.command.lense.desc_scale_hud_set"));
 
         ctx.sendMessage(prefixed(msg));
     }

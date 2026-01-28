@@ -9,6 +9,7 @@ import ru.hope_zv.mod.LenseConfig;
 public class LensePlayerConfig {
 
     private boolean hudEnabled = true;
+    private float hudScale = 1;
 
     public LensePlayerConfig() {
     }
@@ -16,7 +17,8 @@ public class LensePlayerConfig {
     public static LensePlayerConfig createWithDefaults(LenseConfig serverConfig) {
         LensePlayerConfig config = new LensePlayerConfig();
         config.hudEnabled = serverConfig.isServerDefaultHudEnabled();
+        config.hudScale = serverConfig.getServerDefaultHudScale();
         return config;
     }
-    
+
 }
