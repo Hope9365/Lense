@@ -62,8 +62,8 @@ dependencies {
 
     implementation(files("$hytaleHome/install/$patchline/package/game/$game_build/Server/HytaleServer.jar"))
 
-    compileOnly "com.buuz135:MultipleHUD:1.0.3"
-    runtimeOnly "com.buuz135:MultipleHUD:1.0.3"
+    compileOnly "com.buuz135:MultipleHUD:1.0.4"
+    runtimeOnly "com.buuz135:MultipleHUD:1.0.4"
 }
 
 test {
