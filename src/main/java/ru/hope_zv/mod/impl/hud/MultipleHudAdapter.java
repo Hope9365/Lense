@@ -22,8 +22,10 @@ public class MultipleHudAdapter implements HudAdapter {
     public void showHud(@Nonnull Player player, @Nonnull PlayerRef playerRef, float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         LenseHud hud = huds.computeIfAbsent(playerRef.getUuid(), _ -> new LenseHud(playerRef));
 
-        hud.updateHud(player, playerRef, dt, index, archetypeChunk, store, commandBuffer);
-        MultipleHUD.getInstance().setCustomHud(player, playerRef, "LenseHud", hud);
+        boolean isDirty = hud.updateHud(player, playerRef, dt, index, archetypeChunk, store, commandBuffer);
+        if (isDirty) {
+            MultipleHUD.getInstance().setCustomHud(player, playerRef, "LenseHud", hud);
+        }
 
     }
 

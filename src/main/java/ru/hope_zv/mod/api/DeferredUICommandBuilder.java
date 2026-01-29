@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -19,6 +20,12 @@ public class DeferredUICommandBuilder {
 
     public static DeferredUICommandBuilder create() {
         return new DeferredUICommandBuilder();
+    }
+
+    public int computeOperationCommandsHash() {
+        UICommandBuilder builder = new UICommandBuilder();
+        applyTo(builder);
+        return Arrays.hashCode(builder.getCommands());
     }
 
     public DeferredUICommandBuilder clear(String selector) {
@@ -131,5 +138,5 @@ public class DeferredUICommandBuilder {
         operations.clear();
         return this;
     }
-    
+
 }

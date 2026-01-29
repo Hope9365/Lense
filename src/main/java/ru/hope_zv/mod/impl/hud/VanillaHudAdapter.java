@@ -21,10 +21,12 @@ public class VanillaHudAdapter implements HudAdapter {
     public void showHud(@Nonnull Player player, @Nonnull PlayerRef playerRef, float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         LenseHud hud = huds.computeIfAbsent(playerRef.getUuid(), _ -> new LenseHud(playerRef));
 
-        hud.updateHud(player, playerRef, dt, index, archetypeChunk, store, commandBuffer);
-        player.getHudManager().setCustomHud(playerRef, hud);
-        hud.show();
-        
+        boolean isDirty = hud.updateHud(player, playerRef, dt, index, archetypeChunk, store, commandBuffer);
+        if (isDirty) {
+            player.getHudManager().setCustomHud(playerRef, hud);
+            hud.show();
+        }
+
     }
 
     @Override

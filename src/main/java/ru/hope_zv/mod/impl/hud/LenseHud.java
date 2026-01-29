@@ -27,11 +27,14 @@ public class LenseHud extends CustomUIHud {
     private final BlockContext blockContext = new BlockContext();
     private final EntityContext entityContext = new EntityContext();
 
+    private boolean hasLastHash = false;
+    private int lastHash = 0;
+
     public LenseHud(@Nonnull PlayerRef playerRef) {
         super(playerRef);
     }
 
-    public void updateHud(
+    public boolean updateHud(
             @Nonnull Player player,
             @Nonnull PlayerRef playerRef,
             float dt,
@@ -54,10 +57,15 @@ public class LenseHud extends CustomUIHud {
             }
         }
 
-        if (hudEnabled && !deferredBuilder.getOperations().isEmpty()) {
-            deferredBuilder.set("#LenseHud.Visible", true);
-        }
+        boolean visible = hudEnabled && !deferredBuilder.getOperations().isEmpty();
+        deferredBuilder.set("#LenseHud.Visible", visible);
 
+        int hash = deferredBuilder.computeOperationCommandsHash();
+        boolean isDirty = !hasLastHash || hash != lastHash;
+        hasLastHash = true;
+        lastHash = hash;
+
+        return isDirty;
     }
 
     @Override
