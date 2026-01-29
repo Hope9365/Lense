@@ -4,7 +4,6 @@ import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import ru.hope_zv.mod.api.hud.HudAdapter;
@@ -20,19 +19,12 @@ public class VanillaHudAdapter implements HudAdapter {
 
     @Override
     public void showHud(@Nonnull Player player, @Nonnull PlayerRef playerRef, float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
-        LenseHud hud = huds.computeIfAbsent(playerRef.getUuid(), _ -> {
-            LenseHud newHud = new LenseHud(playerRef);
-            player.getHudManager().setCustomHud(playerRef, newHud);
-            return newHud;
-        });
+        LenseHud hud = huds.computeIfAbsent(playerRef.getUuid(), _ -> new LenseHud(playerRef));
 
-        CustomUIHud currentCustomHud = player.getHudManager().getCustomHud();
-        if (currentCustomHud instanceof LenseHud) {
-            hud.updateHud(player, playerRef, dt, index, archetypeChunk, store, commandBuffer);
-        } else {
-            player.getHudManager().setCustomHud(playerRef, hud);
-        }
-
+        hud.updateHud(player, playerRef, dt, index, archetypeChunk, store, commandBuffer);
+        player.getHudManager().setCustomHud(playerRef, hud);
+        hud.show();
+        
     }
 
     @Override

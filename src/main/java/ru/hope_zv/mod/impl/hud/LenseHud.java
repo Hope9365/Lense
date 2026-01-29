@@ -31,42 +31,6 @@ public class LenseHud extends CustomUIHud {
         super(playerRef);
     }
 
-    private static void resetVisibleValues(@Nonnull UICommandBuilder builder) {
-        builder.set("#LenseHud.Visible", false);
-
-        // Header
-        builder.set("#LenseInfoHeader.Visible", false);
-
-        // Block? Icon
-        builder.set("#LenseIconContainer.Visible", false);
-
-        // Block Break Progress
-        builder.set("#LenseBlockBreakProgressContainer.Visible", false);
-
-        // Entity Health
-        builder.set("#LenseEntityHealthContainer.Visible", false);
-
-        // Block Components
-        builder.set("#LenseFarmingComponent.Visible", false);
-        builder.set("#LenseFarmingGrowthLabel.Visible", false);
-        
-        builder.set("#LenseTeleporterComponent.Visible", false);
-        builder.set("#LenseTeleporterSelfWarp.Visible", false);
-        builder.set("#LenseTeleporterTargetWarp.Visible", false);
-
-        // Block States
-        builder.set("#LenseProcessingBenchState.Visible", false);
-        builder.set("#LenseProcessingBenchProgress.Visible", false);
-
-        builder.set("#LenseBenchState.Visible", false);
-
-        builder.set("#LenseItemContainerState.Visible", false);
-        builder.set("#LenseContainerItems.Visible", false);
-
-        // Footer
-        builder.set("#LenseInfoFooter.Visible", false);
-    }
-
     public void updateHud(
             @Nonnull Player player,
             @Nonnull PlayerRef playerRef,
@@ -90,15 +54,10 @@ public class LenseHud extends CustomUIHud {
             }
         }
 
-        UICommandBuilder builder = new UICommandBuilder();
-        resetVisibleValues(builder);
-
         if (hudEnabled && !deferredBuilder.getOperations().isEmpty()) {
-            builder.set("#LenseHud.Visible", true);
-            deferredBuilder.applyTo(builder);
+            deferredBuilder.set("#LenseHud.Visible", true);
         }
 
-        this.update(false, builder);
     }
 
     @Override
@@ -117,6 +76,9 @@ public class LenseHud extends CustomUIHud {
         builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/ProcessingBenchState.ui");
         builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/BenchState.ui");
         builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/States/ItemContainerState.ui");
+
+
+        deferredBuilder.applyTo(builder);
     }
-    
+
 }

@@ -1,12 +1,10 @@
 package ru.hope_zv.mod.impl.hud;
 
-import com.buuz135.mhud.MultipleCustomUIHud;
 import com.buuz135.mhud.MultipleHUD;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import ru.hope_zv.mod.api.hud.HudAdapter;
@@ -22,18 +20,10 @@ public class MultipleHudAdapter implements HudAdapter {
 
     @Override
     public void showHud(@Nonnull Player player, @Nonnull PlayerRef playerRef, float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
-        LenseHud hud = huds.computeIfAbsent(playerRef.getUuid(), _ -> {
-            LenseHud newHud = new LenseHud(playerRef);
-            MultipleHUD.getInstance().setCustomHud(player, playerRef, "LenseHud", newHud);
-            return newHud;
-        });
+        LenseHud hud = huds.computeIfAbsent(playerRef.getUuid(), _ -> new LenseHud(playerRef));
 
-        CustomUIHud currentCustomHud = player.getHudManager().getCustomHud();
-        if (currentCustomHud instanceof MultipleCustomUIHud) {
-            hud.updateHud(player, playerRef, dt, index, archetypeChunk, store, commandBuffer);
-        } else {
-            MultipleHUD.getInstance().setCustomHud(player, playerRef, "LenseHud", hud);
-        }
+        hud.updateHud(player, playerRef, dt, index, archetypeChunk, store, commandBuffer);
+        MultipleHUD.getInstance().setCustomHud(player, playerRef, "LenseHud", hud);
 
     }
 
