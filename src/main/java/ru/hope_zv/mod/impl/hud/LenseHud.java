@@ -44,6 +44,7 @@ public class LenseHud extends CustomUIHud {
             @Nonnull CommandBuffer<EntityStore> commandBuffer
     ) {
         this.deferredBuilder.reset();
+        blockContentProvider.resetUiState();
 
         boolean hudEnabled = Lense.getInstance().getConfigService().getConfig(playerRef).isHudEnabled();
 
@@ -70,8 +71,6 @@ public class LenseHud extends CustomUIHud {
 
     @Override
     protected void build(@Nonnull UICommandBuilder builder) {
-        blockContentProvider.resetUiState();
-
         builder.append("Hud/Lense/Elements/Lense.ui");
 
         builder.append("#LenseInfoBodyInner", "Hud/Lense/Elements/EntityHealth.ui");

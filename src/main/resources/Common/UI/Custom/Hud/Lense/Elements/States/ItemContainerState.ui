@@ -1,6 +1,6 @@
 @SlotSize = 74 * 0.45;
 @SlotIconSize = 64 * 0.45;
-@SlotSpacing = 2 * 0.45;
+//@SlotSpacing = 2 * 0.45;
 @TileWidth = 76 * 0.45;
 @TileHeightBase = 92 * 0.45;
 @RowSpacing = 18 * 0.45;
