@@ -1,8 +1,8 @@
 lense.hud.tier=Tier {tier}
 lense.hud.farming_growth_percent=Growth {percent}%
 lense.hud.farming_fully_grown=Fully grown
-lense.hud.teleporter_self_warp=Self warp - {warp}
-lense.hud.teleporter_target_warp=Target warp - {warp}
+lense.hud.teleporter_self_warp=Self Warp - {warp}
+lense.hud.teleporter_target_warp=Target Warp - {warp}
 lense.command.lense.desc_available_commands=Available commands:
 lense.command.lense.desc_toggle_hud=- Toggle HUD
 lense.command.lense.desc_toggle_hud_on=- Enable HUD

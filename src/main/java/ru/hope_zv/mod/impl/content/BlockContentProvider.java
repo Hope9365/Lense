@@ -4,6 +4,8 @@ import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
 import com.hypixel.hytale.builtin.adventure.teleporter.component.Teleporter;
 import com.hypixel.hytale.builtin.crafting.component.BenchBlock;
 import com.hypixel.hytale.builtin.crafting.component.ProcessingBenchBlock;
+import com.hypixel.hytale.builtin.teleport.TeleportPlugin;
+import com.hypixel.hytale.builtin.teleport.Warp;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.FarmingData;
@@ -134,7 +136,8 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
 
                 String targetWarpName = teleporter.getWarp();
                 if (targetWarpName != null && !targetWarpName.isEmpty()) {
-                    targetWarpNameDisplay = targetWarpName;
+                    Warp targetWarp = TeleportPlugin.get().getWarps().get(targetWarpName.toLowerCase());
+                    targetWarpNameDisplay = targetWarp != null ? targetWarp.getId() : targetWarpName;
                 }
 
                 if (selfWarpNameDisplay != null || targetWarpNameDisplay != null) {
