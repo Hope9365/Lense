@@ -6,7 +6,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.3'
-    id 'io.freefair.lombok' version "9.1.0"
+    id 'io.freefair.lombok' version "9.5.0"
 }
 
 group = project.group
@@ -49,10 +49,6 @@ javadoc {
 
 repositories {
     mavenCentral()
-
-    maven {
-        url "https://maven.hytale-modding.info/releases/"
-    }
 }
 
 dependencies {
@@ -61,9 +57,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation(files("$hytaleHome/install/$patchline/package/game/$game_build/Server/HytaleServer.jar"))
-
-    compileOnly "com.buuz135:MultipleHUD:1.0.4"
-    runtimeOnly "com.buuz135:MultipleHUD:1.0.4"
 }
 
 test {
@@ -128,7 +121,7 @@ tasks.named('build') {
             if (t.hasProperty('archiveFile') && t.archiveFile.isPresent()) keep << t.archiveFile.get().asFile
         }
 
-        def libsDir = file("$buildDir/libs")
+        def libsDir = layout.buildDirectory.dir("libs").get().asFile
         if (libsDir.exists()) {
             libsDir.listFiles()?.each { f ->
                 if (!keep.contains(f)) {

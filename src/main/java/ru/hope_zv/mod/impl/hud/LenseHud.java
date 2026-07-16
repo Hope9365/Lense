@@ -31,7 +31,7 @@ public class LenseHud extends CustomUIHud {
     private int lastHash = 0;
 
     public LenseHud(@Nonnull PlayerRef playerRef) {
-        super(playerRef);
+        super(playerRef, LenseHudController.HUD_KEY);
     }
 
     public boolean updateHud(

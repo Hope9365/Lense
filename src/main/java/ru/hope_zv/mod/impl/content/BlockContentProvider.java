@@ -2,20 +2,18 @@ package ru.hope_zv.mod.impl.content;
 
 import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
 import com.hypixel.hytale.builtin.adventure.teleporter.component.Teleporter;
-import com.hypixel.hytale.builtin.crafting.state.BenchState;
-import com.hypixel.hytale.builtin.crafting.state.ProcessingBenchState;
+import com.hypixel.hytale.builtin.crafting.component.BenchBlock;
+import com.hypixel.hytale.builtin.crafting.component.ProcessingBenchBlock;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.bench.BenchTierLevel;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.FarmingData;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.FarmingStageData;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTranslationProperties;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.modules.block.components.ItemContainerBlock;
 import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.ui.Value;
-import com.hypixel.hytale.server.core.universe.world.meta.BlockState;
-import com.hypixel.hytale.server.core.universe.world.meta.state.ItemContainerState;
 import ru.hope_zv.mod.Lense;
 import ru.hope_zv.mod.api.DeferredUICommandBuilder;
 import ru.hope_zv.mod.api.content.ContentProvider;
@@ -28,7 +26,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@SuppressWarnings("removal")
 public class BlockContentProvider implements ContentProvider<BlockContext> {
 
     private static final ThreadLocal<NumberFormat> QUANTITY_FORMAT = ThreadLocal.withInitial(() -> {
@@ -211,121 +208,99 @@ public class BlockContentProvider implements ContentProvider<BlockContext> {
             //
 
             // States
-            if (context.getBlockState() != null) {
-                BlockState state = context.getBlockState();
-                switch (state) {
-                    case ProcessingBenchState processor: {
-                        int tier = processor.getTierLevel();
-                        float progress = -1;
+            ProcessingBenchBlock processor = context.getCompProcessingBench();
+            BenchBlock bench = context.getCompBench();
+            ItemContainerBlock container = context.getCompItemContainer();
 
-                        if (processor.isActive() && processor.getRecipe() != null) {
-                            float inputProgress = processor.getInputProgress();
-                            float recipeTime = processor.getRecipe().getTimeSeconds();
+            if (processor != null) {
+                int tier = bench != null ? bench.getTierLevel() : -1;
+                float progress = -1;
 
-                            if (recipeTime > 0) {
-                                BenchTierLevel levelData = processor.getBench().getTierLevel(tier);
-                                float timeReduction = levelData != null ? levelData.getCraftingTimeReductionModifier() : 0;
-                                if (timeReduction > 0) {
-                                    recipeTime -= recipeTime * timeReduction;
-                                }
+                if (processor.isActive() && processor.getRecipe() != null) {
+                    float recipeTime = processor.getRecipeTimeSeconds(Math.max(tier, 0));
+                    if (recipeTime > 0) {
+                        progress = processor.getInputProgress() / recipeTime;
+                    }
+                }
 
-                                progress = inputProgress / recipeTime;
+                deferredBuilder.set("#LenseProcessingBenchState.Visible", true);
+                if (tier != -1) {
+                    deferredBuilder.set(
+                            "#LenseProcessingBenchTierLabel.TextSpans",
+                            Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR)
+                    );
+                }
+                if (progress != -1) {
+                    deferredBuilder.set("#LenseProcessingBenchProgress.Visible", true);
+                    deferredBuilder.set("#LenseProcessingBenchProgressBar.Value", Math.clamp(progress, 0, 1));
+                }
+            } else if (bench != null) {
+                int tier = bench.getTierLevel();
+
+                deferredBuilder.set("#LenseBenchState.Visible", true);
+                if (tier != -1) {
+                    deferredBuilder.set(
+                            "#LenseBenchTierLabel.TextSpans",
+                            Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR)
+                    );
+                }
+            } else if (container != null) {
+                List<ItemStack> stacks = new ArrayList<>();
+
+                r:
+                for (short i = 0; i < container.getCapacity(); ++i) {
+                    ItemStack stack = container.getItemContainer().getItemStack(i);
+                    if (stack != null) {
+                        for (int j = 0; j < stacks.size(); ++j) {
+                            ItemStack itemStack = stacks.get(j);
+                            if (itemStack.isEquivalentType(stack)) {
+                                stacks.set(j, itemStack.withQuantity(itemStack.getQuantity() + stack.getQuantity()));
+                                continue r;
                             }
                         }
+                        stacks.add(stack);
+                    }
+                }
 
-                        deferredBuilder.set("#LenseProcessingBenchState.Visible", true);
-                        if (tier != -1) {
-                            deferredBuilder.set(
-                                    "#LenseProcessingBenchTierLabel.TextSpans",
-                                    Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR)
-                            );
+                if (!stacks.isEmpty()) {
+                    deferredBuilder.set("#LenseItemContainerState.Visible", true);
+                    deferredBuilder.set("#LenseContainerItems.Visible", true);
+
+                    int renderCount = stacks.size();
+
+                    int perRow = Math.min(renderCount, 9);
+                    int width = Math.round((76 * 0.45f) * perRow);
+
+                    Anchor anchor = new Anchor();
+                    anchor.setWidth(Value.of(width));
+
+                    deferredBuilder.setObject("#LenseContainerItems.Anchor", anchor);
+
+                    ensureContainerSlots(deferredBuilder, renderCount);
+
+                    for (int i = 0; i < renderCount; i++) {
+                        int slot = i + 1;
+                        ItemStack stack = stacks.get(i);
+                        ItemStack iconStack = stack.withQuantity(1);
+                        if (iconStack == null) {
+                            iconStack = stack;
                         }
-                        if (progress != -1) {
-                            deferredBuilder.set("#LenseProcessingBenchProgress.Visible", true);
-                            deferredBuilder.set("#LenseProcessingBenchProgressBar.Value", Math.clamp(progress, 0, 1));
-                        }
-                        break;
+
+                        deferredBuilder.set("#LenseContainerItem" + slot + ".Visible", true);
+                        deferredBuilder.set("#LenseContainerItem" + slot + "Grid.ItemStacks", List.of(iconStack));
+                        deferredBuilder.set(
+                                "#LenseContainerItem" + slot + "Quantity.TextSpans",
+                                Message.raw(formatCompactQuantity(stack.getQuantity()))
+                        );
                     }
 
-                    case BenchState bench: {
-                        int tier = bench.getTierLevel();
-
-                        deferredBuilder.set("#LenseBenchState.Visible", true);
-                        if (tier != -1) {
-                            deferredBuilder.set(
-                                    "#LenseBenchTierLabel.TextSpans",
-                                    Message.translation("server.lense.hud.tier").param("tier", tier).color(DESC_COLOR)
-                            );
+                    if (lastRenderedContainerSlots > renderCount) {
+                        for (int slot = renderCount + 1; slot <= lastRenderedContainerSlots; slot++) {
+                            deferredBuilder.set("#LenseContainerItem" + slot + ".Visible", false);
                         }
-                        break;
                     }
 
-                    case ItemContainerState container: {
-                        List<ItemStack> stacks = new ArrayList<>();
-
-                        r:
-                        for (short i = 0; i < container.getItemContainer().getCapacity(); ++i) {
-                            ItemStack stack = container.getItemContainer().getItemStack(i);
-                            if (stack != null) {
-                                for (int j = 0; j < stacks.size(); ++j) {
-                                    ItemStack itemStack = stacks.get(j);
-                                    if (itemStack.isEquivalentType(stack)) {
-                                        stacks.set(j, itemStack.withQuantity(itemStack.getQuantity() + stack.getQuantity()));
-                                        continue r;
-                                    }
-                                }
-                                stacks.add(stack);
-                            }
-                        }
-
-                        if (stacks.isEmpty()) {
-                            break;
-                        }
-
-                        deferredBuilder.set("#LenseItemContainerState.Visible", true);
-                        deferredBuilder.set("#LenseContainerItems.Visible", true);
-
-                        int renderCount = stacks.size();
-
-                        int perRow = Math.min(renderCount, 9);
-                        int width = Math.round((76 * 0.45f) * perRow);
-
-                        Anchor anchor = new Anchor();
-                        anchor.setWidth(Value.of(width));
-
-                        deferredBuilder.setObject("#LenseContainerItems.Anchor", anchor);
-
-                        ensureContainerSlots(deferredBuilder, renderCount);
-
-                        for (int i = 0; i < renderCount; i++) {
-                            int slot = i + 1;
-                            ItemStack stack = stacks.get(i);
-                            ItemStack iconStack = stack.withQuantity(1);
-                            if (iconStack == null) {
-                                iconStack = stack;
-                            }
-
-                            deferredBuilder.set("#LenseContainerItem" + slot + ".Visible", true);
-                            deferredBuilder.set("#LenseContainerItem" + slot + "Grid.ItemStacks", List.of(iconStack));
-                            deferredBuilder.set(
-                                    "#LenseContainerItem" + slot + "Quantity.TextSpans",
-                                    Message.raw(formatCompactQuantity(stack.getQuantity()))
-                            );
-                        }
-
-                        if (lastRenderedContainerSlots > renderCount) {
-                            for (int slot = renderCount + 1; slot <= lastRenderedContainerSlots; slot++) {
-                                deferredBuilder.set("#LenseContainerItem" + slot + ".Visible", false);
-                            }
-                        }
-
-                        lastRenderedContainerSlots = renderCount;
-                        break;
-                    }
-
-                    default: {
-                        break;
-                    }
+                    lastRenderedContainerSlots = renderCount;
                 }
             }
             //
